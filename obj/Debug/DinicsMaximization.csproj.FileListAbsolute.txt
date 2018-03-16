@@ -1,6 +1,0 @@
-C:\Users\PC\Documents\Visual Studio 2017\Projects\DinicsMaximization\bin\Debug\DinicsMaximization.exe.config
-C:\Users\PC\Documents\Visual Studio 2017\Projects\DinicsMaximization\bin\Debug\DinicsMaximization.exe
-C:\Users\PC\Documents\Visual Studio 2017\Projects\DinicsMaximization\bin\Debug\DinicsMaximization.pdb
-C:\Users\PC\Documents\Visual Studio 2017\Projects\DinicsMaximization\obj\Debug\DinicsMaximization.csprojResolveAssemblyReference.cache
-C:\Users\PC\Documents\Visual Studio 2017\Projects\DinicsMaximization\obj\Debug\DinicsMaximization.exe
-C:\Users\PC\Documents\Visual Studio 2017\Projects\DinicsMaximization\obj\Debug\DinicsMaximization.pdb
