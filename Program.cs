@@ -18,6 +18,9 @@ namespace DinicsMaximization
         }
         public static void addEdge(List<Edge>[] graph, int s, int t, int cap)
         {
+            //Console.WriteLine("graph[t].Count(): " + graph[t].Count());
+            //Console.WriteLine("graph[s].Count() - 1: " + (graph[s].Count() - 1));
+            //Console.WriteLine("||||||||||||||||||||||||||||||||||||||||||||||||");
             graph[s].Add(new Edge(t, graph[t].Count(), cap));
             graph[t].Add(new Edge(s, graph[s].Count() - 1, 0));
         }
@@ -32,10 +35,10 @@ namespace DinicsMaximization
             {
                 throw new ArgumentOutOfRangeException("fromIndex");
             }
-            if (end >= array.Length)
-            {
-                throw new ArgumentOutOfRangeException("toIndex");
-            }
+            //if (end >= array.Length)
+            //{
+            //    throw new ArgumentOutOfRangeException("toIndex");
+            //}
             for (int i = start; i < end; i++)
             {
                 array[i] = value;
@@ -105,11 +108,43 @@ namespace DinicsMaximization
 
         static void Main(string[] args)
         {
-            List<Edge>[] graph = createGraph(3);
+            /**
+             Escenarios para tomar en cuenta:
+                - Conexión mínima
+                - Conexión fuertemente conexa
+                - Conexión con 3 arcos por vértice
+             */
+            List<Edge>[] graph = createGraph(5);
             addEdge(graph, 0, 1, 3);
             addEdge(graph, 0, 2, 2);
             addEdge(graph, 1, 2, 2);
-            Console.WriteLine(4 == maxFlow(graph, 0, 2));
+            addEdge(graph, 0, 3, 4);
+            addEdge(graph, 1, 3, 3);
+            //Console.WriteLine(4 == maxFlow(graph, 0, 2));
+            Console.WriteLine(maxFlow(graph, 0, 3));
+            for (int i = 0; i < graph.Length; i++)
+            {
+                foreach (Edge e in graph[i])
+                {
+                    Console.WriteLine("VALOR VERTICE 2: " + e.t);
+                    Console.WriteLine("VALOR VERTICE 1: " + e.rev);
+                    Console.WriteLine("VALOR CAPACITY: " + e.cap);
+                    Console.WriteLine("VALOR FLOW: " + e.f);
+                    Console.WriteLine("---------------------");
+                }
+            }
+            //printMaxFlow(graph);
+            Console.ReadKey();
+        }
+
+        static void printMaxFlow(List<Edge>[] graph)
+        {
+            Console.WriteLine("MAXIMOS FLUJOS");
+            Console.WriteLine("Fuente = 0, Destino = 2 | " + maxFlow(graph, 0, 2));
+            Console.WriteLine("Fuente = 0, Destino = 1 | " + maxFlow(graph, 0, 1));
+            Console.WriteLine("Fuente = 1, Destino = 2 | " + maxFlow(graph, 1, 2));
+            Console.WriteLine("Fuente = 2, Destino = 3 | " + maxFlow(graph, 2, 3));
+            Console.WriteLine("Fuente = 3, Destino = 1 | " + maxFlow(graph, 3, 1));
         }
     }
 }
