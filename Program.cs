@@ -6,123 +6,102 @@ namespace DinicsMaximization
 {
     class Program
     {
-        static int A = 0;
-        static int C = 0;
+        static int AF = 0;
+        static int CF = 0;
+
 
         // FordFulkerson
-        Boolean bfs(int[,] rGraph, int s, int t, int[] parent)
+        public static Boolean bfs(List<Edge>[] graph, int s, int t, int[] parent)
         {
-            Boolean[] visited = new Boolean[V];
-            for (int i = 0; i < V; ++i)
+            Boolean[] visited = new Boolean[graph.Count()];
+            for (int i = 0; i < graph.Count(); ++i)
             {
                 visited[i] = false;
-                A += 2;
-                C += 1;
+                AF += 2;
+                CF += 1;
             }
-            A += 1;
-            C += 1;
+            AF += 1;
+            CF += 1;
 
             LinkedList<int> queue = new LinkedList<int>();
             queue.AddFirst(s);
             visited[s] = true;
             parent[s] = -1;
-            A += 2;
+            AF += 2;
 
             while (queue.Count != 0)
             {
-                C += 1;
+                CF += 1;
                 int u = queue.First();
-                A += 1;
+                AF += 1;
                 queue.Remove(u);
 
-                for (int v = 0; v < V; v++)
+                for (int v = 0; v < graph.Count(); v++)
                 {
-                    C += 1;
-                    A += 1;
-                    if (visited[v] == false && rGraph[u, v] > 0)
+                    CF += 1;
+                    AF += 1;
+                    List<Edge> list = graph[u];
+                    if (visited[v] == false && list[v].cap > 0)
                     {
-                        C += 2;
+                        CF += 2;
                         queue.AddFirst(v);
                         parent[v] = u;
                         visited[v] = true;
-                        A += 2;
+                        AF += 2;
                     }
                 }
-                C += 1;
-                A += 1;
+                CF += 1;
+                AF += 1;
             }
-            C += 1;
+            CF += 1;
             return (visited[t] == true);
 
         }
 
         // FordFulkerson
-        int fordFulkerson(int[,] graph, int s, int t)
+        public static int fordFulkerson(List<Edge>[] graph2, int s, int t)
         {
+            List<Edge>[] graph = copyGraph(graph2, 10);
             int u, v;
-            int[,] rGraph = new int[V, V];
 
-            for (u = 0; u < V; u++)
-            {
-                A += 1;
-                C += 1;
-                for (v = 0; v < V; v++)
-                {
-                    rGraph[u, v] = graph[u, v];
-                    A += 2;
-                    C += 1;
-                }
-                A += 1;
-                C += 1;
-            }
-            A += 1;
-            C += 1;
-
-
-            int[] parent = new int[V];
+            int[] parent = new int[graph.Count()];
 
             int max_flow = 0;
-            A += 1;
-            while (bfs(rGraph, s, t, parent))
+            AF += 1;
+            while (bfs(graph, s, t, parent))
             {
                 int path_flow = int.MaxValue;
-                A += 1;
+                AF += 1;
                 for (v = t; v != s; v = parent[v])
                 {
                     u = parent[v];
-                    path_flow = Math.Min(path_flow, rGraph[u, v]);
-                    A += 4;
-                    C += 1;
+                    List<Edge> list = graph[u];
+                    path_flow = Math.Min(path_flow, list[v].cap);
+                    AF += 4;
+                    CF += 1;
                 }
-                A += 1;
-                C += 1;
+                AF += 1;
+                CF += 1;
 
                 for (v = t; v != s; v = parent[v])
                 {
                     u = parent[v];
-                    rGraph[u, v] -= path_flow;
-                    rGraph[v, u] += path_flow;
-                    A += 5;
-                    C += 1;
+                    List<Edge> list = graph[u];
+                    List<Edge> list2 = graph[v];
+                    list[v].cap -= path_flow;
+                    list[u].cap += path_flow;
+                    AF += 5;
+                    CF += 1;
                 }
-                A += 1;
-                C += 1;
+                AF += 1;
+                CF += 1;
                 max_flow += path_flow;
-                A += 1;
+                AF += 1;
             }
             return max_flow;
         }
-        int[,] graph = new int[6, 6];
-        public void crearGrafo()
-        {
-            for (int i = 0; i < 6; i++)
-            {
-                for (int j = 0; j < 6; j++)
-                {
 
-                }
-            }
-        }
+//**********************************************************************************************************
 
         public static List<Edge>[] createGraph(int nodes)
         {
@@ -280,28 +259,46 @@ namespace DinicsMaximization
             }
             return 0;
         }
+        public static  List<Edge>[] copyGraph(List<Edge>[] graph, int nodes) {
+            List<Edge>[] graph2 = createGraph(nodes);
+            for (int i=0;i< graph.Count();i++) {
+                foreach (Edge edge in graph[i]) {
+                    graph2[i].Add(edge);
+                }
+            }
+            return graph2;
+        }
 
         static void Main(string[] args)
-        {
+        { 
             /**
              Escenarios para tomar en cuenta:
                 - Conexión mínima
                 - Conexión fuertemente conexa
                 - Conexión con 3 arcos por vértice
              */
-            List<Edge>[] graph = createGraph(10);
+            List<Edge>[] graphD1 = createGraph(10);
+            minimunConnected(graphD1);
+            List<Edge>[] graphD2 = createGraph(10);
+            mediumConnected(graphD2);
+            List<Edge>[] graphD3 = createGraph(10);
+            stronglyConnected(graphD3);
             //Random random = new Random();
             //addEdge(graph, 0, 1, 3);
             //addEdge(graph, 0, 2, 2);
             //addEdge(graph, 1, 2, 2); ;
             //Console.WriteLine(4 == maxFlow(graph, 0, 2));
             //Console.WriteLine(maxFlow(graph, 0, 3));
-            minimunConnected(graph);
+
+            //Gafos para el metodo de Ford-Fulkerson
+            List<Edge>[] graphF1 = copyGraph(graphD1, 10);
+            List<Edge>[] graphF2 = copyGraph(graphD2, 10);
+            List<Edge>[] graphF3 = copyGraph(graphD3, 10);
             //Console.WriteLine(vertexConnections);
             int count = 0;
-            for (int i = 0; i < graph.Length; i++)
+            for (int i = 0; i < graphD1.Length; i++)
             {
-                foreach (Edge e in graph[i])
+                foreach (Edge e in graphD1[i])
                 {
                     if(e.cap != 0)
                     {
@@ -315,7 +312,9 @@ namespace DinicsMaximization
                     }
                 }
             }
-            printMaxFlow(graph);
+
+            printMaxFlow(graphD2);
+            printMaxFlowFordFulkerson(graphF3);
             Console.ReadKey();
         }
 
@@ -331,13 +330,21 @@ namespace DinicsMaximization
             Console.WriteLine(maxFlow(graph, 0, 7));
             Console.WriteLine(maxFlow(graph, 0, 8));
             Console.WriteLine(maxFlow(graph, 0, 9));
-            //for (int i = 0; i < graph.Length; i++)
-            //{
-            //    for (int j = 0; j < graph.Length; j++) {
-            //        Console.WriteLine("IN LOOP");
-            //        Console.WriteLine(maxFlow(graph, i, j));
-            //    }
-            //}           
+            /*for (int i = 0; i < graph.Length; i++)
+            {
+                for (int j = 0; j < graph.Length; j++) {
+                    Console.WriteLine("IN LOOP");
+                    Console.WriteLine(maxFlow(graph, i, j));
+                }
+            }     */      
+        }
+        //***************************Luis Carlos ***********************************
+        static void printMaxFlowFordFulkerson(List<Edge>[] graph)
+        {
+            Console.WriteLine("******** MAXIMUN FLOWS WHIT FORD FULKERSON ********");
+            for (int i=1;i<10;i++) {
+                Console.WriteLine("Nodo 0 hasta Nodo "+i+" flujo maximo de ("+fordFulkerson(graph, 0, i)+")");
+            }
         }
     }
 }
