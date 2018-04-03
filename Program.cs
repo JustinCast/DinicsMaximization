@@ -1,15 +1,129 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
 
 namespace DinicsMaximization
 {
     class Program
     {
+        static int A = 0;
+        static int C = 0;
+
+        // FordFulkerson
+        Boolean bfs(int[,] rGraph, int s, int t, int[] parent)
+        {
+            Boolean[] visited = new Boolean[V];
+            for (int i = 0; i < V; ++i)
+            {
+                visited[i] = false;
+                A += 2;
+                C += 1;
+            }
+            A += 1;
+            C += 1;
+
+            LinkedList<int> queue = new LinkedList<int>();
+            queue.AddFirst(s);
+            visited[s] = true;
+            parent[s] = -1;
+            A += 2;
+
+            while (queue.Count != 0)
+            {
+                C += 1;
+                int u = queue.First();
+                A += 1;
+                queue.Remove(u);
+
+                for (int v = 0; v < V; v++)
+                {
+                    C += 1;
+                    A += 1;
+                    if (visited[v] == false && rGraph[u, v] > 0)
+                    {
+                        C += 2;
+                        queue.AddFirst(v);
+                        parent[v] = u;
+                        visited[v] = true;
+                        A += 2;
+                    }
+                }
+                C += 1;
+                A += 1;
+            }
+            C += 1;
+            return (visited[t] == true);
+
+        }
+
+        // FordFulkerson
+        int fordFulkerson(int[,] graph, int s, int t)
+        {
+            int u, v;
+            int[,] rGraph = new int[V, V];
+
+            for (u = 0; u < V; u++)
+            {
+                A += 1;
+                C += 1;
+                for (v = 0; v < V; v++)
+                {
+                    rGraph[u, v] = graph[u, v];
+                    A += 2;
+                    C += 1;
+                }
+                A += 1;
+                C += 1;
+            }
+            A += 1;
+            C += 1;
+
+
+            int[] parent = new int[V];
+
+            int max_flow = 0;
+            A += 1;
+            while (bfs(rGraph, s, t, parent))
+            {
+                int path_flow = int.MaxValue;
+                A += 1;
+                for (v = t; v != s; v = parent[v])
+                {
+                    u = parent[v];
+                    path_flow = Math.Min(path_flow, rGraph[u, v]);
+                    A += 4;
+                    C += 1;
+                }
+                A += 1;
+                C += 1;
+
+                for (v = t; v != s; v = parent[v])
+                {
+                    u = parent[v];
+                    rGraph[u, v] -= path_flow;
+                    rGraph[v, u] += path_flow;
+                    A += 5;
+                    C += 1;
+                }
+                A += 1;
+                C += 1;
+                max_flow += path_flow;
+                A += 1;
+            }
+            return max_flow;
+        }
+        int[,] graph = new int[6, 6];
+        public void crearGrafo()
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+
+                }
+            }
+        }
+
         public static List<Edge>[] createGraph(int nodes)
         {
             List<Edge>[] graph = new List<Edge>[nodes];
@@ -21,13 +135,15 @@ namespace DinicsMaximization
         public static void minimunConnected(List<Edge>[] graph)
         {
             int size = graph.Length;
+            Random random = new Random();
+            int capacity;
             for (int i = 0; i < graph.Length; i++)
             {
-                Random random = new Random();
                 int destVertex = random.Next(0, size - 1);
                 while (isConnected(graph, i, destVertex))
                     destVertex = random.Next(0, graph.Length - 1);
-                addEdge(graph, i, destVertex, random.Next(1 , graph.Length));
+                capacity = random.Next(1, graph.Length);
+                addEdge(graph, i, destVertex, capacity);               
             }
         }
 
