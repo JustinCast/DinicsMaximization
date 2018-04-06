@@ -40,7 +40,6 @@ namespace DinicsMaximization
             return capacity;
         }
 
-
         public String toString()
         {
             return this.start + "->" + this.target + "(" + this.capacity + ")";

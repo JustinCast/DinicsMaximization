@@ -6,10 +6,6 @@ namespace DinicsMaximization
 {
     class Program
     {
-  
-
-        //************************************
-
         public static List<Edge>[] createGraph(int nodes)
         {
             List<Edge>[] graph = new List<Edge>[nodes];
@@ -80,9 +76,6 @@ namespace DinicsMaximization
 
         public static void addEdge(List<Edge>[] graph, int s, int t, int cap)
         {
-            //Console.WriteLine("graph[t].Count(): " + graph[t].Count());
-            //Console.WriteLine("graph[s].Count() - 1: " + (graph[s].Count() - 1));
-            //Console.WriteLine("||||||||||||||||||||||||||||||||||||||||||||||||");
             graph[s].Add(new Edge(t, s, cap));
             graph[t].Add(new Edge(s, t, 0));
         }
@@ -90,21 +83,11 @@ namespace DinicsMaximization
         public static void Fill<T>(T[] array, int start, int end, T value)
         {
             if (array == null)
-            {
                 throw new ArgumentNullException("array");
-            }
             if (start < 0 || start >= end)
-            {
                 throw new ArgumentOutOfRangeException("fromIndex");
-            }
-            //if (end >= array.Length)
-            //{
-            //    throw new ArgumentOutOfRangeException("toIndex");
-            //}
             for (int i = start; i < end; i++)
-            {
                 array[i] = value;
-            }
         }
 
         static bool dinicBfs(List<Edge>[] graph, int src, int dest, int[] dist)
@@ -168,50 +151,42 @@ namespace DinicsMaximization
             }
             return 0;
         }
-        
-        static void Main(string[] args)
-        {
-            int size = 100;
+        public static void crearGrafos(int size){
             List<Edge>[] graphD1 = createGraph(size);
             minimunConnected(graphD1);
             List<Edge>[] graphD2 = createGraph(size);
             mediumConnected(graphD2);
             List<Edge>[] graphD3 = createGraph(size);
             stronglyConnected(graphD3);
-
-            //Random random = new Random();
-            //addEdge(graph, 0, 1, 3);
-            //addEdge(graph, 0, 2, 2);
-            //addEdge(graph, 1, 2, 2); ;
-            //Console.WriteLine(4 == maxFlow(graph, 0, 2));
-            //Console.WriteLine(maxFlow(graph, 0, 3));
-            //Console.WriteLine(vertexConnections);           
-            //int count = 0;
-            //for (int i = 0; i < graphD1.Length; i++)
-            //{
-            //    foreach (Edge e in graphD1[i])
-            //    {
-            //        if (e.cap != 0)
-            //        {
-            //            count++;
-            //            Console.WriteLine(count);
-            //            Console.WriteLine("VALOR VERTICE 2: " + e.t);
-            //            Console.WriteLine("VALOR VERTICE 1: " + e.rev);
-            //            Console.WriteLine("VALOR CAPACITY: " + e.cap);
-            //            Console.WriteLine("VALOR FLOW: ");
-            //            Console.WriteLine("---------------------");
-            //        }
-            //    }
-            //}
-            printMaxFlow(graphD2);
-            new FordFulkersonAlgo(graphD1, graphD2, graphD3);
+        }
+        
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Metodo Ford Fulkerson "); 
+            crearGrafos(10);
+            printMaxFlowFordFulkerson(graphD1, graphD2, graphD3,10);
+            crearGrafos(50);
+            printMaxFlowFordFulkerson(graphD1, graphD2, graphD3,50);
+            crearGrafos(100);
+            printMaxFlowFordFulkerson(graphD1, graphD2, graphD3,100);
+            crearGrafos(500);
+            printMaxFlowFordFulkerson(graphD1, graphD2, graphD3,500);
+            crearGrafos(1000);
+            printMaxFlowFordFulkerson(graphD1, graphD2, graphD3,1000);
             Console.ReadKey();
         }
 
-        static void printMaxFlow(List<Edge>[] graph)
+
+
+        static void printMaxFlowDinics(List<Edge>[] graph)
         {
-            Console.WriteLine("|||||| MAXIMUN FLOWS ||||||");            
+            Console.WriteLine("Metodo Dinics ");            
             Console.WriteLine(maxFlow(graph, 0, graph.Length - 1));
+        }
+
+        static void printMaxFlowFordFulkerson(List<Edge>[] graphD1,List<Edge>[] graphD2,List<Edge>[] graphD3,int num){
+            Console.WriteLine("Metodo Ford Fulkerson "); 
+            new FordFulkersonAlgo(graphD1, graphD2, graphD3,num);
         }
 
     }

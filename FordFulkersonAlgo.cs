@@ -20,44 +20,36 @@ namespace DinicsMaximization
          *
          * @param args will be ignored
          */
-        public FordFulkersonAlgo(List<Edge>[] graphD1, List<Edge>[] graphD2, List<Edge>[] graphD3)
+        public FordFulkersonAlgo(List<Edge>[] graphD1, List<Edge>[] graphD2, List<Edge>[] graphD3,int num)
         {
             this.graphD1 = graphD1;
             this.graphD2 = graphD2;
             this.graphD3 = graphD3;
-            printTamNodes();
-            ParseData(100);            
-        }
-
-        private void printTamNodes()
-        {
-            Console.WriteLine("");
-            Console.WriteLine("===== Tamano de " + graphD1.Length + " Nodos ===== ");
-            Console.WriteLine("");
+            ParseData(num);            
         }
 
         private void ParseData(int size)
         {
             int source = 0;
             int sink = size - 1;
-
-
+            Console.WriteLine("************ Tamaño del grafo "+size +"************");
             for (int i = 1; i <= 3; i++)
             {
                 g = new DirectedGraph();
                 connections(i);
-                DateTime initialT = DateTime.Now;
+                DateTime time = DateTime.Now;
                 Dictionary<EdgeF, int> flow = getMaxFlow(g, source, sink); ffLines++;
+
                 int maxFlow = getFlowSize(flow, g, source); ffLines++;
-                Console.WriteLine("Max Flow: " + maxFlow);
-                Console.WriteLine("Min Cut: " + maxFlow);
+
+
                 DateTime finalT = DateTime.Now;
-                TimeSpan total = new TimeSpan(finalT.Ticks - initialT.Ticks);
-                Console.WriteLine("TIEMPO: " + total.ToString());
-                Console.WriteLine("Cantidad asignaciones: " + af);
-                Console.WriteLine("Cantidad comparaciones: " + compF);
-                Console.WriteLine("Cantidad Total de lineas ejecutadas: " + ffLines);
-                Console.WriteLine(" ");
+                TimeSpan total = new TimeSpan(finalT.Ticks - time.Ticks);
+                Console.WriteLine("Asignaciones: " + af);
+                Console.WriteLine("Comparaciones: " + compF);
+                Console.WriteLine("Total de lineas ejecutadas: " + ffLines);
+                Console.WriteLine("Flujo maximo: " + maxFlow);
+                Console.WriteLine("TIEMPO: " + total.ToString()+"\n");
                 ffLines = 0;
 
             }
@@ -70,21 +62,15 @@ namespace DinicsMaximization
             switch (type)
             {
                 case 1:
-                    Console.WriteLine("===========================================" +
-                                       "\n!!!!            Simple Conexion:        !!!!\n" +
-                                         "===========================================\n");
+                    Console.WriteLine("***** Conexión minima *****\n");
                     simpleConexion();
                     break;
                 case 2:
-                    Console.WriteLine("===========================================" +
-                                       "\n!!!!            Triple Conexion:       !!!!\n" +
-                                         "===========================================\n");
+                    Console.WriteLine("***** Conexión triple *****\n");
                     tripleConexion();
                     break;
                 case 3:
-                    Console.WriteLine("=============================================" +
-                                         "\n!!!!            Full Conexion:            !!!!\n" +
-                                           "=============================================\n");
+                    Console.WriteLine("***** Conexión maxima *****\n");
                     fullConexion();
                     break;
             }
@@ -344,21 +330,18 @@ namespace DinicsMaximization
                         {
 
                             parent.Add(e.getTarget(), e); af++; ffLines++;
-                            compF++;
-                            ffLines++;
+                            compF++;ffLines++;
                             if (e.getTarget().Equals(target))
                             {
                                 stop = true; af++; ffLines++;
                                 break;
                             }
-                            //-------------------
                             newFringe.AddLast(e.getTarget()); af++; ffLines++;
                         }
                         else if (e.getTarget().Equals(nodeID)
                               && !parent.ContainsKey(e.getStart())
                               && flow[e] > 0)
                         {
-                            //-------------------
                             ffLines++;
                             parent.Add(e.getStart(), e); af++; ffLines++;
                             compF++;
@@ -368,12 +351,10 @@ namespace DinicsMaximization
                                 stop = true; af++; ffLines++;
                                 break;
                             }
-                            //-------------------
                             newFringe.AddLast(e.getStart()); af++; ffLines++;
                         }
                         ffLines++;
                         compF += 3;
-                        //-------------------
                     }
                     ffLines++;
                     compF++;
@@ -388,12 +369,9 @@ namespace DinicsMaximization
                 {
                     break;
                 }
-                //-------------------
                 // Replace the fringe by the new one.
                 fringe = newFringe; af++; ffLines++;
             }
-            //-------------------
-
             // Return null, if no path was found.
             compF++; ffLines++;
             if (fringe.Count.Equals(0))
@@ -401,22 +379,16 @@ namespace DinicsMaximization
                 return null;
             }
             // If a path was found, reconstruct it.
-            //-------------------
-
             Object node = target; af++; ffLines++;
             LinkedList<EdgeF> path = new LinkedList<EdgeF>(); af++; ffLines++;
-            //-------------------
-
             compF++;
             ffLines++;
             while (!node.Equals(start))
             {
-                //-------------------
                 ffLines++;
                 compF++;
                 EdgeF e = parent[node]; af++; ffLines++;
                 path.AddFirst(e); af++; ffLines++;
-                //-------------------
                 compF++;
                 ffLines++;
                 if (e.getStart().Equals(node))
