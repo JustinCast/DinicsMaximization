@@ -32,7 +32,7 @@ namespace DinicsMaximization
         {
             int source = 0;
             int sink = size - 1;
-            Console.WriteLine("************ Tamaño del grafo "+size +"************");
+            Console.WriteLine("Tamaño del grafo "+size +"\t "+" Metodo FORD FULKERSON \n" );
             for (int i = 1; i <= 3; i++)
             {
                 g = new DirectedGraph();
@@ -42,14 +42,11 @@ namespace DinicsMaximization
 
                 int maxFlow = getFlowSize(flow, g, source); ffLines++;
 
-
                 DateTime finalT = DateTime.Now;
                 TimeSpan total = new TimeSpan(finalT.Ticks - time.Ticks);
-                Console.WriteLine("Asignaciones: " + af);
-                Console.WriteLine("Comparaciones: " + compF);
-                Console.WriteLine("Total de lineas ejecutadas: " + ffLines);
-                Console.WriteLine("Flujo maximo: " + maxFlow);
-                Console.WriteLine("TIEMPO: " + total.ToString()+"\n");
+                Console.WriteLine(" Asignaciones: "+af+"  Comparaciones: "+compF);
+                Console.WriteLine(" Flujo maximo: " + maxFlow+"  Lineas ejecutadas: " + ffLines);
+                Console.WriteLine(" TIEMPO: " + total.ToString()+"\n");
                 ffLines = 0;
 
             }
@@ -62,15 +59,15 @@ namespace DinicsMaximization
             switch (type)
             {
                 case 1:
-                    Console.WriteLine("***** Conexión minima *****\n");
+                    Console.WriteLine("\t--- Conexión minima ---");
                     simpleConexion();
                     break;
                 case 2:
-                    Console.WriteLine("***** Conexión triple *****\n");
+                    Console.WriteLine("\t--- Conexión media ---");
                     tripleConexion();
                     break;
                 case 3:
-                    Console.WriteLine("***** Conexión maxima *****\n");
+                    Console.WriteLine("\t--- Conexión maxima ---");
                     fullConexion();
                     break;
             }
